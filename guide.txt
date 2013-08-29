@@ -1,0 +1,13 @@
+1) 创建数据库及用户
+create database roadrantz;
+grant all on roadrantz.* to 'roadrantz'@'your_mysql' identified by 'roadrantz';
+
+其中，your_mysql指你的mysql数据库所在的主机IP地址
+
+在mysql命令行中执行：
+source src/db/create-tables-mysql.sql
+创建数据库表结构
+
+2) 修改数据库链接配置文件src/main/resources/db.properties
+
+3) 使用ant run-jdbc-dao 运行程序，同时观察mysql相关表的数据变化.

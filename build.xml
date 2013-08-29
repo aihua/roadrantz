@@ -1,0 +1,431 @@
+<project name="roadrantz" default="init" basedir=".">
+	<property name="spring.home" location="/opt/spring/framework/2.0.8" />
+	<property name="spring.security.home" location="/opt/spring/security/1.0.7" />
+	<property name="struts.home" location="/opt/struts/2.3.15" />
+	<property name="hsql.path" location="/project/roadrantz/db" />
+	<property name="hsql.name" value="roadrantz" />
+	<property name="src" location="src/main/java" />
+	<property name="lib" location="lib" />
+	<property name="resources" location="src/main/resources" />
+	<property name="webapp" location="src/main/webapp" />
+	<property name="dist.dir" location="dist" />
+	<property name="dist.classes.dir" location="${dist.dir}/classes" />
+	<property name="dist.lib.dir" location="${dist.dir}/lib" />
+	<property name="build.dir" location="build" />
+	<property name="build.classes.dir" location="${build.dir}/classes" />
+	<property name="project.version" value="1.0.5" />
+	<property name="javac.src.version" value="1.6" />
+	<property name="javac.target.version" value="1.6" />
+
+	<path id="spring.jar">
+		<fileset dir="${spring.home}/dist/modules">
+			<include name="spring-core.jar" />
+			<include name="spring-beans.jar" />
+			<include name="spring-context.jar" />
+			<include name="spring-support.jar" />
+			<include name="spring-dao.jar" />
+			<include name="spring-jdbc.jar" />
+			<include name="spring-jmx.jar" />
+		</fileset>
+	</path>
+
+	<path id="spring-mvc.jar">
+		<fileset dir="${spring.home}/dist/modules">
+			<include name="spring-web.jar" />
+			<include name="spring-webmvc.jar" />
+		</fileset>
+	</path>
+
+	<path id="spring-security.jar">
+		<fileset dir="${spring.security.home}">
+			<include name="acegi-security-1.0.7.jar" />
+		</fileset>
+	</path>
+
+	<path id="jakarta-commons.jar">
+		<fileset dir="${spring.home}/lib/jakarta-commons">
+			<include name="commons-lang.jar" />
+			<include name="commons-logging.jar" />
+			<include name="commons-digester.jar" />
+			<include name="commons-collections.jar" />
+			<include name="commons-beanutils.jar" />
+			<include name="commons-validator.jar" />
+		</fileset>
+	</path>
+
+	<path id="cache.jar">
+		<fileset dir="${lib}">
+			<include name="spring-modules-cache-0.8.jar" />
+		</fileset>
+	</path>
+
+	<path id="ehcache.jar">
+		<fileset dir="${spring.home}/lib/ehcache">
+			<include name="ehcache-1.3.0.jar" />
+		</fileset>
+	</path>
+
+	<path id="mysql.jar">
+		<fileset dir="${lib}">
+			<include name="mysql-connector-java-5.1.7-bin.jar" />
+		</fileset>
+	</path>
+
+	<path id="spring-modules-validation.jar">
+		<fileset dir="${lib}">
+			<include name="spring-modules-validation-0.8.jar" />
+		</fileset>
+	</path>
+
+	<path id="aop.jar">
+		<fileset dir="${spring.home}/dist/modules">
+			<include name="spring-aop.jar" />
+		</fileset>
+		<fileset dir="${spring.home}/lib/aopalliance">
+			<include name="aopalliance.jar" />
+		</fileset>
+	</path>
+
+	<path id="mail.jar">
+		<fileset dir="${spring.home}/lib/j2ee">
+			<include name="mail.jar" />
+		</fileset>
+	</path>
+
+	<path id="jta.jar">
+		<fileset dir="${spring.home}/lib/j2ee">
+			<include name="jta.jar" />
+		</fileset>
+	</path>
+
+	<path id="log4j.jar">
+		<fileset dir="${spring.home}/lib/log4j">
+			<include name="log4j-1.2.14.jar" />
+		</fileset>
+	</path>
+
+	<path id="aspectj.jar">
+		<fileset dir="${spring.home}/lib/aspectj">
+			<include name="aspectjrt.jar" />
+			<include name="aspectjweaver.jar" />
+		</fileset>
+	</path>
+
+	<path id="quartz.jar">
+		<fileset dir="${spring.home}/lib/quartz">
+			<include name="quartz*.jar" />
+		</fileset>
+	</path>
+
+	<path id="servlet.jar">
+		<fileset dir="${spring.home}/lib/j2ee">
+			<include name="servlet-api.jar" />
+			<include name="jsp-api.jar" />
+		</fileset>
+	</path>
+
+	<path id="jstl.jar">
+		<fileset dir="${spring.home}/lib/j2ee">
+			<include name="jstl.jar" />
+		</fileset>
+		<fileset dir="${spring.home}/lib/jakarta-taglibs">
+			<include name="standard.jar" />
+		</fileset>
+	</path>
+
+	<path id="tiles.jar">
+		<fileset dir="${struts.home}/lib">
+			<include name="tiles-core-2.0.6.jar" />
+			<include name="tiles-api-2.0.6.jar" />
+			<include name="tiles-compat-3.0.1.jar" />
+			<include name="tiles-servlet-3.0.1.jar" />
+			<include name="tiles-jsp-2.0.6.jar" />
+		</fileset>
+	</path>
+
+	<path id="struts.jar">
+		<fileset dir="${spring.home}/lib/struts">
+			<include name="struts.jar" />
+		</fileset>
+	</path>
+
+	<path id="oro.jar">
+		<fileset dir="${spring.home}/lib/oro">
+			<include name="jakarta-oro-2.0.8.jar" />
+		</fileset>
+	</path>
+
+	<path id="build.classes.path">
+		<pathelement location="${build.classes.dir}" />
+		<fileset dir="${lib}" includes="ejb3-persistence.jar"/>
+		<path refid="spring.jar" />
+		<path refid="spring-mvc.jar" />
+		<path refid="jakarta-commons.jar" />
+		<path refid="cache.jar" />
+		<path refid="quartz.jar" />
+		<path refid="struts.jar" />
+		<path refid="oro.jar" />
+		<path refid="servlet.jar" />
+		<path refid="jstl.jar" />
+		<path refid="spring-security.jar" />
+		<path refid="log4j.jar" />
+		<path refid="aspectj.jar" />
+	</path>
+
+	<path id="web.jar.path">
+		<fileset dir="${lib}">
+			<include name="ejb3-persistence.jar"/>
+		</fileset>
+		<path refid="spring.jar" />
+		<path refid="spring-mvc.jar" />
+		<path refid="spring-security.jar" />
+		<path refid="jakarta-commons.jar" />
+		<path refid="cache.jar" />
+		<path refid="quartz.jar" />
+		<path refid="struts.jar" />
+		<path refid="oro.jar" />
+		<path refid="jstl.jar" />
+		<path refid="log4j.jar" />
+		<path refid="aop.jar" />
+		<path refid="aspectj.jar" />
+		<path refid="mysql.jar" />
+		<path refid="mail.jar" />
+		<path refid="jta.jar" />
+		<path refid="cache.jar" />
+		<path refid="ehcache.jar" />
+		<path refid="quartz.jar" />
+		<path refid="spring-modules-validation.jar" />
+	</path>
+
+	<path id="run.classes.path">
+		<pathelement location="${dist.classes.dir}" />
+		<fileset dir="${dist.lib.dir}" includes="*.jar"/>
+		<fileset dir="${lib}" includes="ejb3-persistence.jar"/>
+		<path refid="spring.jar" />
+		<path refid="aop.jar" />
+		<path refid="jakarta-commons.jar" />
+		<path refid="mysql.jar" />
+		<path refid="mail.jar" />
+		<path refid="cache.jar" />
+		<path refid="quartz.jar" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${dist.dir}" />
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="init" depends="clean" >
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/war" />
+		<mkdir dir="${dist.classes.dir}" />
+		<mkdir dir="${dist.lib.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.classes.dir}" />
+	</target>
+
+	<target name="compile-domain" depends="clean, init">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.classes.path" />
+			<include name="com/roadrantz/domain/**/*.java" />
+		</javac>
+	</target>
+
+	<target name="compile-jdbc-dao" depends="clean, init, compile-domain">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.classes.path" />
+			<include name="com/roadrantz/dao/RantDao.java" />
+			<include name="com/roadrantz/dao/jdbc/**/*.java" />
+		</javac>
+	</target>
+
+	<target name="compile-service" depends="clean, init, compile-domain, compile-jdbc-dao">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.classes.path" />
+			<include name="com/roadrantz/service/**/*.java" />
+		</javac>
+	</target>
+
+	<target name="compile-jdbc-dao-app" depends="clean, init, compile-service">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.classes.path" />
+			<include name="com/roadrantz/dao/DaoMain.java" />
+		</javac>
+	</target>
+
+	<target name="compile-web-mvc" depends="clean, init, compile-domain, compile-jdbc-dao, compile-service">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.classes.path" />
+			<include name="com/roadrantz/mvc/**/*.java" />
+			<include name="com/roadrantz/tiles/**/*.java" />
+			<exclude name="com/roadrantz/mvc/**/RantExcelView.java" />
+			<exclude name="com/roadrantz/mvc/**/RantPdfView.java" />
+			<exclude name="com/roadrantz/mvc/**/RantRssView.java" />
+		</javac>
+	</target>
+
+	<target name="compile-web-security" depends="clean, init, compile-domain, compile-jdbc-dao, compile-service">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.classes.path" />
+			<include name="com/roadrantz/security/**/*.java" />
+		</javac>
+	</target>
+
+	<target name="compile-web-util" depends="clean, init, compile-domain, compile-jdbc-dao, compile-service">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.classes.path" />
+			<include name="com/roadrantz/util/**/*.java" />
+		</javac>
+	</target>
+
+	<target name="compile" depends="compile-domain, compile-jdbc-dao, compile-service, compile-jdbc-dao-app, compile-web-mvc, compile-web-security, compile-web-util" />
+
+	<target name="package-domain" depends="clean, init, compile-domain">
+		<jar destfile="${dist.lib.dir}/roadrantz-domain-${project.version}.jar" 
+				 basedir="${build.classes.dir}" includes="com/roadrantz/domain/**" />
+	</target>
+
+	<target name="package-jdbc-dao" depends="clean, init, compile-jdbc-dao">
+		<jar destfile="${dist.lib.dir}/roadrantz-jdbc-dao-${project.version}.jar" 
+				 basedir="${build.classes.dir}">
+			<include name="com/roadrantz/dao/*.class" />
+			<include name="com/roadrantz/dao/jdbc/**/*.class" />
+			<exclude name="com/roadrantz/dao/DaoMain.class" />
+		</jar>
+	</target>
+
+	<target name="package-service" depends="clean, init, compile-service">
+		<jar destfile="${dist.lib.dir}/roadrantz-service-${project.version}.jar" 
+				 basedir="${build.classes.dir}" includes="com/roadrantz/service/**/*.class" />
+	</target>
+
+	<target name="package-jdbc-dao-app" depends="clean, init, compile-jdbc-dao-app">
+		<jar destfile="${dist.lib.dir}/roadrantz-jdbc-dao-app-${project.version}.jar" 
+				 basedir="${build.classes.dir}" includes="com/roadrantz/dao/DaoMain.class" />
+	</target>
+
+	<target name="package-web-mvc" depends="clean, init, compile-web-mvc">
+		<jar destfile="${dist.lib.dir}/roadrantz-web-mvc-${project.version}.jar" 
+				 basedir="${build.classes.dir}">
+			<include name="com/roadrantz/mvc/**/*.class" />
+			<include name="com/roadrantz/tiles/**/*.class" />
+		</jar>
+	</target>
+
+	<target name="package-web-security" depends="clean, init, compile-web-security">
+		<jar destfile="${dist.lib.dir}/roadrantz-web-security-${project.version}.jar" 
+				 basedir="${build.classes.dir}">
+			<include name="com/roadrantz/security/**/*.class" />
+		</jar>
+	</target>
+
+	<target name="package-web-util" depends="clean, init, compile-web-security">
+		<jar destfile="${dist.lib.dir}/roadrantz-web-util-${project.version}.jar" 
+				 basedir="${build.classes.dir}">
+			<include name="com/roadrantz/util/**/*.class" />
+		</jar>
+	</target>
+
+	<target name="package" depends="package-domain, package-jdbc-dao, package-service, package-jdbc-dao-app, package-web-mvc, package-web-security, package-web-util" />
+
+	<target name="dist" depends="package">
+		<copy todir="${dist.dir}/war">
+			<fileset dir="${webapp}" />
+		</copy>
+		<copy todir="${dist.dir}/war/WEB-INF/lib">
+			<fileset dir="${dist.lib.dir}" />
+		</copy>
+		<copy todir="${dist.dir}/war/WEB-INF/lib" flatten="true">
+			<path refid="web.jar.path" />
+		</copy>
+		
+		<!--
+		<copy todir="${dist.dir}/war/WEB-INF/lib">
+			<fileset dir="${spring.home}/dist/modules">
+				<include name="spring-core.jar" />
+				<include name="spring-beans.jar" />
+				<include name="spring-context.jar" />
+				<include name="spring-support.jar" />
+				<include name="spring-dao.jar" />
+				<include name="spring-jdbc.jar" />
+				<include name="spring-jmx.jar" />
+				<include name="spring-web.jar" />
+				<include name="spring-webmvc.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${dist.dir}/war/WEB-INF/lib">
+			<fileset dir="${spring.security.home}">
+				<include name="spring-core.jar" />
+				<include name="spring-beans.jar" />
+				<include name="spring-context.jar" />
+				<include name="spring-support.jar" />
+				<include name="spring-dao.jar" />
+				<include name="spring-jdbc.jar" />
+				<include name="spring-jmx.jar" />
+				<include name="spring-web.jar" />
+				<include name="spring-webmvc.jar" />
+			</fileset>
+		</copy>
+		-->
+		<copy todir="${dist.dir}/war/WEB-INF/classes">
+			<fileset dir="${resources}" >
+				<include name="db.properties" />
+				<include name="log4j.properties" />
+				<include name="messages.properties" />
+				<include name="ehcache.xml" />
+				<include name="roadrantz-data.xml" />
+				<include name="roadrantz-data-jdbc.xml" />
+				<include name="roadrantz-transactions.xml" />
+				<include name="roadrantz-email.xml" />
+				<include name="roadrantz-mbeans.xml" />
+				<include name="roadrantz-cache.xml" />
+				<include name="roadrantz-services.xml" />
+				<include name="roadrantz-security.xml" />
+				<include name="roadrantz-servlet.xml" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="deploy-jdbc-dao" depends="package">
+		<copy todir="${dist.classes.dir}">
+			<fileset dir="${resources}" >
+				<include name="db.properties" />
+				<include name="log4j.properties" />
+				<include name="roadrantz-data.xml" />
+				<include name="roadrantz-data-jdbc.xml" />
+				<include name="roadrantz-transactions.xml" />
+				<include name="roadrantz-email.xml" />
+				<include name="roadrantz-mbeans.xml" />
+				<include name="roadrantz-services.xml" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="run-jdbc-dao" depends="deploy-jdbc-dao">
+		<java classname="com.roadrantz.dao.DaoMain">
+			<classpath refid="run.classes.path" />
+		</java>
+	</target>
+<!--	
+	<target name="startDb">
+    <echo message="Starting HSQLDB"/>
+    <java fork="true" dir="." classname="org.hsqldb.Server">
+      <classpath>
+        <pathelement path="${spring.home}/lib/hsqldb/hsqldb.jar"/>
+      </classpath>
+      <arg value="-database.0"/>
+      <arg value="${hsql.path}"/>
+      <arg value="-dbname.0"/>
+      <arg value="${hsql.name}"/>
+    </java>
+	</target>
+	
+  <target name="dbmgr">
+    <java fork="true" dir="." classname="org.hsqldb.util.DatabaseManager">
+      <classpath>
+        <pathelement path="${spring.home}/lib/hsqldb/hsqldb.jar"/>
+      </classpath>
+    </java>
+  </target>
+-->
+</project>
