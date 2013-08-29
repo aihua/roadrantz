@@ -16,7 +16,7 @@ public class DaoMain {
         "src/main/webapp/WEB-INF/services.xml", "src/main/webapp/WEB-INF/dataaccess.xml"   
     }); */
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {
-			"roadrantz-data.xml", "roadrantz-data-jdbc.xml", "roadrantz-transactions.xml", 
+			"roadrantz-data.xml", "roadrantz-data-jpa.xml", "roadrantz-transactions.xml", 
 			"roadrantz-email.xml", "roadrantz-mbeans.xml", "roadrantz-services.xml"
 		});
     

@@ -16,6 +16,7 @@
 	<property name="project.version" value="1.0.5" />
 	<property name="javac.src.version" value="1.6" />
 	<property name="javac.target.version" value="1.6" />
+	<property file="${resources}/db.properties"/>
 
 	<path id="spring.jar">
 		<fileset dir="${spring.home}/dist/modules">
@@ -155,6 +156,25 @@
 		</fileset>
 	</path>
 
+	<path id="jpa.jar">
+		<fileset dir="${spring.home}/lib/jpa">
+			<include name="persistence.jar" />
+		</fileset>
+		<fileset dir="${spring.home}/dist/modules">
+			<include name="spring-jpa.jar" />
+		</fileset>
+	</path>
+
+	<path id="toplink.jar">
+		<fileset dir="${spring.home}/lib/toplink">
+			<include name="toplink-api.jar" />
+			<include name="toplink-essentials.jar" />
+		</fileset>
+		<fileset dir="${spring.home}/dist/modules">
+			<include name="spring-toplink.jar" />
+		</fileset>
+	</path>
+
 	<path id="build.classes.path">
 		<pathelement location="${build.classes.dir}" />
 		<fileset dir="${lib}" includes="ejb3-persistence.jar"/>
@@ -170,6 +190,24 @@
 		<path refid="spring-security.jar" />
 		<path refid="log4j.jar" />
 		<path refid="aspectj.jar" />
+	</path>
+
+	<path id="build.jpa.classes.path">
+		<pathelement location="${build.classes.dir}" />
+		<path refid="spring.jar" />
+		<path refid="spring-mvc.jar" />
+		<path refid="jakarta-commons.jar" />
+		<path refid="cache.jar" />
+		<path refid="quartz.jar" />
+		<path refid="struts.jar" />
+		<path refid="oro.jar" />
+		<path refid="servlet.jar" />
+		<path refid="jstl.jar" />
+		<path refid="spring-security.jar" />
+		<path refid="log4j.jar" />
+		<path refid="aspectj.jar" />
+		<path refid="jpa.jar" />
+		<path refid="toplink.jar" />
 	</path>
 
 	<path id="web.jar.path">
@@ -210,6 +248,20 @@
 		<path refid="quartz.jar" />
 	</path>
 
+	<path id="run.jpa.classes.path">
+		<pathelement location="${dist.classes.dir}" />
+		<fileset dir="${dist.lib.dir}" includes="*.jar"/>
+		<path refid="spring.jar" />
+		<path refid="aop.jar" />
+		<path refid="jakarta-commons.jar" />
+		<path refid="mysql.jar" />
+		<path refid="mail.jar" />
+		<path refid="cache.jar" />
+		<path refid="quartz.jar" />
+		<path refid="jpa.jar" />
+		<path refid="toplink.jar" />
+	</path>
+
 	<target name="clean">
 		<delete dir="${dist.dir}" />
 		<delete dir="${build.dir}" />
@@ -231,11 +283,26 @@
 		</javac>
 	</target>
 
+	<target name="compile-jpa-domain" depends="clean, init">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.jpa.classes.path" />
+			<include name="com/roadrantz/domain/**/*.java" />
+		</javac>
+	</target>
+
 	<target name="compile-jdbc-dao" depends="clean, init, compile-domain">
 		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
 			<classpath refid="build.classes.path" />
 			<include name="com/roadrantz/dao/RantDao.java" />
 			<include name="com/roadrantz/dao/jdbc/**/*.java" />
+		</javac>
+	</target>
+
+	<target name="compile-jpa-dao" depends="clean, init, compile-domain">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.jpa.classes.path" />
+			<include name="com/roadrantz/dao/RantDao.java" />
+			<include name="com/roadrantz/dao/jpa/**/*.java" />
 		</javac>
 	</target>
 
@@ -246,9 +313,23 @@
 		</javac>
 	</target>
 
+	<target name="compile-jpa-service" depends="clean, init, compile-jpa-domain, compile-jpa-dao">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.jpa.classes.path" />
+			<include name="com/roadrantz/service/**/*.java" />
+		</javac>
+	</target>
+
 	<target name="compile-jdbc-dao-app" depends="clean, init, compile-service">
 		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
 			<classpath refid="build.classes.path" />
+			<include name="com/roadrantz/dao/DaoMain.java" />
+		</javac>
+	</target>
+
+	<target name="compile-jpa-dao-app" depends="clean, init, compile-jpa-service">
+		<javac srcdir="${src}" destdir="${build.classes.dir}" source="${javac.src.version}" target="${javac.target.version}" includeAntRuntime="false">
+			<classpath refid="build.jpa.classes.path" />
 			<include name="com/roadrantz/dao/DaoMain.java" />
 		</javac>
 	</target>
@@ -285,6 +366,11 @@
 				 basedir="${build.classes.dir}" includes="com/roadrantz/domain/**" />
 	</target>
 
+	<target name="package-jpa-domain" depends="clean, init, compile-jpa-domain">
+		<jar destfile="${dist.lib.dir}/roadrantz-domain-${project.version}.jar" 
+				 basedir="${build.classes.dir}" includes="com/roadrantz/domain/**" />
+	</target>
+
 	<target name="package-jdbc-dao" depends="clean, init, compile-jdbc-dao">
 		<jar destfile="${dist.lib.dir}/roadrantz-jdbc-dao-${project.version}.jar" 
 				 basedir="${build.classes.dir}">
@@ -294,6 +380,20 @@
 		</jar>
 	</target>
 
+	<target name="package-jpa-dao" depends="clean, init, compile-jpa-dao">
+		<jar destfile="${dist.lib.dir}/roadrantz-jpa-dao-${project.version}.jar" 
+				 basedir="${build.classes.dir}">
+			<include name="com/roadrantz/dao/*.class" />
+			<include name="com/roadrantz/dao/jpa/**/*.class" />
+			<exclude name="com/roadrantz/dao/DaoMain.class" />
+		</jar>
+	</target>
+
+	<target name="package-jpa-service" depends="clean, init, compile-jpa-service">
+		<jar destfile="${dist.lib.dir}/roadrantz-service-${project.version}.jar" 
+				 basedir="${build.classes.dir}" includes="com/roadrantz/service/**/*.class" />
+	</target>
+
 	<target name="package-service" depends="clean, init, compile-service">
 		<jar destfile="${dist.lib.dir}/roadrantz-service-${project.version}.jar" 
 				 basedir="${build.classes.dir}" includes="com/roadrantz/service/**/*.class" />
@@ -301,6 +401,11 @@
 
 	<target name="package-jdbc-dao-app" depends="clean, init, compile-jdbc-dao-app">
 		<jar destfile="${dist.lib.dir}/roadrantz-jdbc-dao-app-${project.version}.jar" 
+				 basedir="${build.classes.dir}" includes="com/roadrantz/dao/DaoMain.class" />
+	</target>
+
+	<target name="package-jpa-dao-app" depends="clean, init, compile-jpa-dao-app">
+		<jar destfile="${dist.lib.dir}/roadrantz-jpa-dao-app-${project.version}.jar" 
 				 basedir="${build.classes.dir}" includes="com/roadrantz/dao/DaoMain.class" />
 	</target>
 
@@ -327,6 +432,8 @@
 	</target>
 
 	<target name="package" depends="package-domain, package-jdbc-dao, package-service, package-jdbc-dao-app, package-web-mvc, package-web-security, package-web-util" />
+
+	<target name="package-jpa" depends="package-jpa-domain, package-jpa-dao, package-jpa-service, package-jpa-dao-app" />
 
 	<target name="dist" depends="package">
 		<copy todir="${dist.dir}/war">
@@ -401,9 +508,40 @@
 		</copy>
 	</target>
 
+	<target name="deploy-jpa-dao" depends="package-jpa">
+		<copy todir="${dist.classes.dir}">
+			<fileset dir="${resources}" >
+				<include name="db.properties" />
+				<include name="log4j.properties" />
+				<include name="roadrantz-data.xml" />
+				<include name="roadrantz-data-jpa.xml" />
+				<include name="roadrantz-transactions.xml" />
+				<include name="roadrantz-email.xml" />
+				<include name="roadrantz-mbeans.xml" />
+				<include name="roadrantz-services.xml" />
+				<include name="META-INF/persistence.xml" />
+			</fileset>
+		</copy>
+		<copy todir="${dist.classes.dir}/META-INF">
+			<fileset dir="${resources}" >
+				<include name="META-INF/persistence.xml" />
+			</fileset>
+		</copy>
+	</target>
+
 	<target name="run-jdbc-dao" depends="deploy-jdbc-dao">
 		<java classname="com.roadrantz.dao.DaoMain">
 			<classpath refid="run.classes.path" />
+		</java>
+	</target>
+
+	<target name="run-jpa-dao" depends="deploy-jpa-dao">
+		<echo message="db.username:${db.username}"/>
+		<echo message="db.password:${db.password}"/>
+		<echo message="db.url:${db.url}"/>
+		<echo message="db.driver:${db.driver}"/>
+		<java classname="com.roadrantz.dao.DaoMain">
+			<classpath refid="run.jpa.classes.path" />
 		</java>
 	</target>
 <!--	
