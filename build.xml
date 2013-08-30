@@ -171,6 +171,12 @@
 		</fileset>
 	</path>
 
+	<path id="spring-jpa.jar">
+		<fileset dir="${spring.home}/dist/modules">
+			<include name="spring-jpa.jar" />
+		</fileset>
+	</path>
+
 	<path id="toplink.jar">
 		<fileset dir="${spring.home}/lib/toplink">
 			<include name="toplink-api.jar" />
@@ -212,8 +218,8 @@
 		<path refid="spring-security.jar" />
 		<path refid="log4j.jar" />
 		<path refid="aspectj.jar" />
-		<path refid="jpa.jar" />
 		<path refid="toplink.jar" />
+		<path refid="spring-jpa.jar" />
 	</path>
 
 	<path id="web.jar.path">
@@ -265,8 +271,9 @@
 		<path refid="mail.jar" />
 		<path refid="cache.jar" />
 		<path refid="quartz.jar" />
-		<path refid="jpa.jar" />
 		<path refid="toplink.jar" />
+		<path refid="spring-jpa.jar" />
+		<path refid="aspectj.jar" />
 	</path>
 
 	<target name="clean">
